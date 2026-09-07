@@ -1,0 +1,99 @@
+/* ============================================================
+   FlowU — สไตล์กลางของระบบ
+   ใช้ CSS ธรรมดา ไม่มี framework ตามข้อกำหนดของ Module 2
+   ============================================================ */
+
+:root{
+  --red:#A8192E; --red-dk:#7d1223; --red-lt:#fdf3f4;
+  --ink:#1c1c1c; --muted:#7a7a7a; --line:#e2dcdd; --bg:#f6f3f4;
+  --green:#2F7A4F; --green-lt:#eaf4ee;
+  --gold:#C9922B;  --gold-lt:#fbecd9;
+  --blue:#31537A;  --blue-lt:#eef3f8;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0 }
+
+body{
+  font-family:'Sarabun','IBM Plex Sans Thai','Noto Sans Thai',Tahoma,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg); color:var(--ink); font-size:15px; line-height:1.6;
+}
+
+/* ---------- แถบบน ---------- */
+header{
+  background:var(--red); color:#fff; padding:0 22px; height:58px;
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;
+}
+.brand{ font-size:20px; font-weight:700; letter-spacing:.5px }
+.brand span{ font-weight:400; font-size:13px; opacity:.85; margin-left:10px }
+.who{ font-size:13px; text-align:right; line-height:1.35 }
+.who b{ display:block }
+.who i{ font-style:normal; opacity:.85; font-size:11.5px }
+
+main{ max-width:1000px; margin:0 auto; padding:24px 22px 40px }
+
+h1{ font-size:22px; margin-bottom:4px }
+h2{ font-size:16px; color:var(--red); margin-bottom:4px }
+.sub{ color:var(--muted); font-size:13.5px; margin-bottom:18px }
+.tm{ font-size:12px; color:var(--muted) }
+.muted{ color:var(--muted); font-size:13px }
+
+code{
+  font-family:'IBM Plex Mono',Consolas,monospace; font-size:12.5px;
+  background:#f2eeef; color:var(--red-dk); padding:1px 5px; border-radius:3px;
+}
+
+/* ---------- การ์ด ---------- */
+.card{
+  background:#fff; border:1px solid var(--line); border-radius:8px;
+  padding:18px 20px; margin-bottom:18px;
+}
+
+/* ---------- แถบแจ้งสถานะ ---------- */
+.alert{ border-radius:6px; padding:12px 16px; margin-bottom:18px; font-size:13.5px }
+.alert.wait{ background:var(--blue-lt);  border-left:4px solid var(--blue) }
+.alert.ok  { background:var(--green-lt); border-left:4px solid var(--green); color:#22603D }
+.alert.err { background:var(--red-lt);   border-left:4px solid var(--red) }
+.alert b{ display:block; margin-bottom:3px; color:var(--red) }
+
+/* ---------- ชิปประเภทคำร้อง ---------- */
+.chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px }
+.chip{
+  font-size:13px; background:var(--red-lt); color:var(--red-dk);
+  border:1px solid #e8c4c9; border-radius:14px; padding:4px 13px;
+}
+.chip.off{ background:#efeced; color:var(--muted); border-color:var(--line) }
+
+.pill{
+  font-size:12px; font-weight:600; background:var(--red); color:#fff;
+  border-radius:11px; padding:1px 10px; margin-left:6px; vertical-align:2px;
+}
+
+/* ---------- ตาราง ---------- */
+.table-wrap{ overflow-x:auto; margin-top:12px }
+table{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:640px }
+th{
+  text-align:left; padding:9px 11px; background:#faf7f8; color:var(--muted);
+  font-size:12px; font-weight:600; border-bottom:2px solid var(--line); white-space:nowrap;
+}
+td{ padding:11px; border-bottom:1px solid #efeaeb; vertical-align:middle }
+tr:last-child td{ border-bottom:none }
+.tt{ font-weight:600 }
+.empty{ text-align:center; color:var(--muted); padding:26px 11px }
+
+/* ---------- ป้ายสถานะ ---------- */
+.b{ display:inline-block; font-size:12px; font-weight:600; padding:2px 11px; border-radius:11px; white-space:nowrap }
+.b-wait{ background:var(--blue-lt);  color:var(--blue);  border:1px solid #b9cbe0 }
+.b-back{ background:var(--red-lt);   color:var(--red);   border:1px solid #e8c4c9 }
+.b-ok  { background:var(--green-lt); color:var(--green); border:1px solid #bcdcc8 }
+.b-no  { background:#efeced;         color:#5a5a5a;      border:1px solid #d6cfd1 }
+
+footer{
+  text-align:center; font-size:11.5px; color:var(--muted);
+  padding:18px; border-top:1px solid var(--line);
+}
+
+@media (max-width:600px){
+  header{ height:auto; padding:12px 16px; gap:6px }
+  .who{ text-align:left }
+  main{ padding:18px 16px 30px }
+}

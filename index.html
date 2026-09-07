@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FlowU — รายการคำร้องฝึกปฏิบัติงาน</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">FlowU<span>ระบบยื่นและอนุมัติใบคำร้องฝึกปฏิบัติงาน</span></div>
+  <div class="who">
+    <b>มหาวิทยาลัยแม่ฟ้าหลวง</b>
+    <i>ส่วนจัดหางานและฝึกงานของนักศึกษา</i>
+  </div>
+</header>
+
+<main>
+  <h1>รายการคำร้องฝึกปฏิบัติงาน</h1>
+  <p class="sub">
+    ข้อมูลทั้งหมดในหน้านี้อ่านจาก Cloud Firestore โดยตรง
+    ยังไม่มีการเพิ่ม แก้ไข หรือลบ ซึ่งจะทำในการบ้านที่ 2
+  </p>
+
+  <div id="status" class="alert wait">กำลังเชื่อมต่อฐานข้อมูล…</div>
+
+  <div class="card">
+    <h2>ประเภทคำร้อง</h2>
+    <p class="tm">อ่านจากโฟลเดอร์ <code>requestTypes</code> เรียงตามช่อง <code>order</code></p>
+    <div id="types" class="chips"><span class="muted">กำลังโหลด…</span></div>
+  </div>
+
+  <div class="card">
+    <h2>คำร้องทั้งหมด <span class="pill" id="count">–</span></h2>
+    <p class="tm">อ่านจากโฟลเดอร์ <code>internshipRequests</code> เรียงตาม <code>createdAt</code> ใหม่สุดก่อน</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:34%">คำร้อง</th>
+            <th style="width:20%">ผู้ยื่น</th>
+            <th style="width:16%">ยื่นเมื่อ</th>
+            <th style="width:14%">อยู่ที่</th>
+            <th>สถานะ</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="5" class="empty">กำลังโหลด…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer>
+  FlowU · การบ้านที่ 1 Module 2 · Kittiya Sirikan · ADT-RAISE Non-Degree Batch 2
+</footer>
+
+<script type="module" src="js/requests.js"></script>
+</body>
+</html>
