@@ -1,0 +1,18 @@
+# ค่าตั้งต้นของ Firebase และคีย์ต่าง ๆ — ห้าม commit
+js/config.js
+
+# คีย์ AI (จะใช้ในสัปดาห์ที่ 8)
+.env
+.env.local
+
+# Firebase
+.firebase/
+firebase-debug.log
+*-debug.log
+
+# ระบบปฏิบัติการและเครื่องมือ
+.DS_Store
+Thumbs.db
+node_modules/
+.vscode/
+.idea/
