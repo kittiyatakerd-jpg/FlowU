@@ -1,0 +1,40 @@
+rules_version = '2';
+
+// ============================================================
+// FlowU — Firestore Security Rules
+//
+// สถานะปัจจุบัน: การบ้านที่ 1 (ยังไม่มีระบบล็อกอิน)
+// อนุญาตให้ "อ่าน" ได้เพื่อให้หน้าเว็บแสดงข้อมูลได้
+// แต่ "เขียน" ปิดทั้งหมด เพื่อไม่ให้ใครแก้ข้อมูลได้
+//
+// TODO การบ้านที่ 2: เปลี่ยนเป็นตรวจสิทธิ์รายบทบาทตาม ACL.md
+//   - อ่านได้เฉพาะเจ้าของคำร้อง ผู้พิจารณา และเจ้าหน้าที่
+//   - เขียนได้ตามกฎธุรกิจ BR-01 ถึง BR-14
+//
+// เตือน: ห้ามนำข้อมูลนักศึกษาจริงเข้าระบบก่อนทำ TODO ข้างบนเสร็จ
+// ============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /requestTypes/{typeId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /internshipRequests/{requestId} {
+      allow read: if true;
+      allow write: if false;
+
+      match /approvals/{approvalId} {
+        allow read: if true;
+        allow write: if false;
+      }
+    }
+
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}
