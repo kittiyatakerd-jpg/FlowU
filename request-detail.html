@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>รายละเอียดคำร้อง — FlowU</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">FlowU<span>ระบบยื่นและอนุมัติใบคำร้องฝึกปฏิบัติงาน</span></div>
+  <div class="who">
+    <b>มหาวิทยาลัยแม่ฟ้าหลวง</b>
+    <i>ส่วนจัดหางานและฝึกงานของนักศึกษา</i>
+  </div>
+  <div id="navUser"></div>
+</header>
+
+<main>
+  <div class="btn-row" style="margin-top:0">
+    <a href="index.html" class="btn-ghost">← กลับหน้ารายการ</a>
+  </div>
+  <h1>รายละเอียดคำร้อง</h1>
+
+  <div id="pageMsg" class="alert err hidden"></div>
+
+  <div id="requestBox" class="card">กำลังโหลด…</div>
+
+  <div id="commentBox" class="card hidden">
+    <h2>ความเห็นการพิจารณา</h2>
+    <div id="timeline"></div>
+  </div>
+</main>
+
+<footer>
+  FlowU · Module 2 · Kittiya Sirikan · ADT-RAISE Non-Degree Batch 2
+</footer>
+
+<script type="module" src="js/request-detail.js"></script>
+</body>
+</html>

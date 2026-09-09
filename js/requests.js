@@ -1,8 +1,9 @@
 // ============================================================
 // หน้ารายการคำร้อง — อ่านข้อมูลจริงจาก Firestore
-// การบ้านที่ 1: แสดงข้อมูลจากฐานข้อมูล ยังไม่มีการเพิ่ม แก้ ลบ
 // ============================================================
 import { db } from "./firebase-init.js";
+import { requireLogin } from "./auth-guard.js";
+import { renderNav } from "./nav.js";
 import {
   collection, getDocs, query, orderBy, where
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -63,6 +64,7 @@ async function loadRequests() {
   snap.forEach(doc => {
     const r  = doc.data();
     const tr = document.createElement("tr");
+    tr.style.cursor = "pointer";
 
     const level = (r.currentLevel && r.totalLevels)
       ? `ระดับ ${r.currentLevel} / ${r.totalLevels}`
@@ -81,12 +83,16 @@ async function loadRequests() {
       <td>${level}</td>
       <td><span class="${badgeClass(r.status)}">${r.status ?? "—"}</span></td>
     `;
+    tr.addEventListener("click", () => {
+      location.href = "request-detail.html?id=" + encodeURIComponent(doc.id);
+    });
     elBody.appendChild(tr);
   });
 }
 
 // เรียกทั้งสองอย่าง และแจ้งข้อผิดพลาดเป็นภาษาไทยถ้าล้มเหลว
 async function main() {
+  await requireLogin().then(renderNav);
   try {
     await Promise.all([loadTypes(), loadRequests()]);
     elStatus.className = "alert ok";

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ยื่นคำร้องใหม่ — FlowU</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">FlowU<span>ระบบยื่นและอนุมัติใบคำร้องฝึกปฏิบัติงาน</span></div>
+  <div class="who">
+    <b>มหาวิทยาลัยแม่ฟ้าหลวง</b>
+    <i>ส่วนจัดหางานและฝึกงานของนักศึกษา</i>
+  </div>
+  <div id="navUser"></div>
+</header>
+
+<main>
+  <h1 id="pageTitle">ยื่นคำร้องฝึกปฏิบัติงานใหม่</h1>
+  <p class="sub">ข้อมูลนักศึกษาด้านล่างดึงจากโปรไฟล์ของคุณอัตโนมัติ กรอกเฉพาะรายละเอียดคำร้อง</p>
+
+  <div id="formMsg" class="alert err hidden"></div>
+
+  <div class="card">
+    <h2>ข้อมูลนักศึกษา</h2>
+    <div class="field-row"><span class="k">ชื่อ-สกุล</span><span class="v" id="pStudentName">–</span></div>
+    <div class="field-row"><span class="k">รหัสประจำตัว</span><span class="v" id="pStudentCode">–</span></div>
+    <div class="field-row"><span class="k">สำนักวิชา</span><span class="v" id="pSchoolName">–</span></div>
+    <div class="field-row"><span class="k">สาขาวิชา</span><span class="v" id="pProgramName">–</span></div>
+  </div>
+
+  <form id="formRequest" class="card">
+    <h2>รายละเอียดคำร้อง</h2>
+
+    <label for="phone">เบอร์โทรศัพท์ติดต่อ <span class="req">*</span></label>
+    <input type="text" id="phone" placeholder="เช่น 0812345678">
+
+    <label for="semester">ภาคการศึกษา <span class="req">*</span></label>
+    <select id="semester">
+      <option value="">— เลือก —</option>
+      <option value="ต้น">ต้น</option>
+      <option value="ปลาย">ปลาย</option>
+    </select>
+
+    <label for="academicYear">ปีการศึกษา <span class="req">*</span></label>
+    <input type="number" id="academicYear" placeholder="เช่น 2569">
+
+    <label for="typeId">ความประสงค์ (ประเภทคำร้อง) <span class="req">*</span></label>
+    <select id="typeId"><option value="">กำลังโหลด…</option></select>
+
+    <label for="typeDetail">ข้อมูลเพิ่มตามประเภท</label>
+    <textarea id="typeDetail" placeholder="ถ้าประเภทที่เลือกต้องการรายละเอียดเพิ่ม กรอกที่นี่ (ไม่บังคับ)"></textarea>
+
+    <label for="reason">เหตุผลอย่างละเอียด <span class="req">*</span></label>
+    <textarea id="reason" placeholder="อธิบายเหตุผลของคำร้องนี้"></textarea>
+
+    <div class="btn-row">
+      <button type="submit" class="btn" id="btnSubmit">บันทึกคำร้อง</button>
+      <a href="index.html" class="btn-ghost">ยกเลิก</a>
+    </div>
+  </form>
+</main>
+
+<footer>
+  FlowU · Module 2 · Kittiya Sirikan · ADT-RAISE Non-Degree Batch 2
+</footer>
+
+<script type="module" src="js/new-request.js"></script>
+</body>
+</html>

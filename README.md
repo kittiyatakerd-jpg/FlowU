@@ -1,5 +1,7 @@
 # FlowU
 
+🔗 **ใช้งานออนไลน์ได้ที่:** https://flowu-7d1a9.web.app
+
 **ระบบยื่นและอนุมัติใบคำร้องฝึกปฏิบัติงานออนไลน์**
 ส่วนจัดหางานและฝึกงานของนักศึกษา มหาวิทยาลัยแม่ฟ้าหลวง
 
@@ -53,17 +55,27 @@ HTML · CSS · JavaScript ธรรมดา (ไม่ใช้ framework) · C
 ## โครงไฟล์
 
 ```
-index.html              หน้ารายการคำร้อง (อ่านข้อมูลจาก Firestore)
+index.html              หน้ารายการคำร้อง (อ่านข้อมูลจาก Firestore, ต้องล็อกอินก่อน)
+login.html              หน้าเข้าสู่ระบบ/สมัครสมาชิก
+new-request.html        หน้ายื่นคำร้องใหม่ / แก้ไขคำร้องที่ถูกตีกลับ
+request-detail.html     หน้ารายละเอียดคำร้อง — พิจารณา/แก้ไข/ลบ
 css/style.css           สไตล์กลางของระบบ
 js/config.example.js    แม่แบบค่าตั้งต้น Firebase
 js/config.js            ค่าจริง — อยู่ใน .gitignore ไม่ถูก commit
-js/firebase-init.js     ตั้งต้น Firebase
+js/firebase-init.js     ตั้งต้น Firebase (Firestore + Authentication)
+js/auth-guard.js        เช็คล็อกอินก่อนเข้าทุกหน้า + อ่านโปรไฟล์ผู้ใช้
+js/nav.js               แถบหัวเรื่อง แสดงอีเมล + ปุ่มออกจากระบบ
+js/login.js             สมัครสมาชิก/เข้าสู่ระบบ
 js/requests.js          อ่านและแสดงข้อมูลคำร้อง
-firestore.rules         กฎความปลอดภัยของฐานข้อมูล
+js/new-request.js        สร้าง/แก้ไขคำร้อง
+js/request-detail.js    ให้ความเห็น/ตัดสิน/ลบคำร้อง
+firestore.rules         กฎความปลอดภัยของฐานข้อมูล (สัปดาห์ 7: ต้องล็อกอินเท่านั้น)
 firebase.json           ค่าตั้งต้น Firebase Hosting
+.firebaserc             โปรเจกต์ Firebase ที่ผูกไว้ (flowu-7d1a9)
 seed/README.md          ข้อมูลสมมติสำหรับทดสอบ
 docs/                   ภาพหน้าจอประกอบการส่งงาน
 SCOPE.md                ขอบเขตโครงงาน
+ACL.md                  สิทธิ์การใช้งานตามบทบาท (student/approver/staff)
 CLAUDE.md               คู่มือสำหรับ Claude Code
 ```
 
@@ -72,7 +84,7 @@ CLAUDE.md               คู่มือสำหรับ Claude Code
 ## ความคืบหน้า
 
 - [x] การบ้านที่ 1 — repo · `SCOPE.md` · อ่านข้อมูลจริงจาก Firestore · ภาพหน้าจอ Console
-- [ ] การบ้านที่ 2 — `CLAUDE.md` · เพิ่ม แก้ ลบ · ระบบล็อกอิน · `ACL.md` · นำขึ้นออนไลน์ · Security Rules
+- [x] การบ้านที่ 2 — `CLAUDE.md` · เพิ่ม แก้ ลบ · ระบบล็อกอิน (Firebase Authentication) · `ACL.md` · นำขึ้นออนไลน์ (Firebase Hosting) · Security Rules ขั้นต่ำ (`request.auth != null`)
 - [ ] การบ้านที่ 3 — ผู้ช่วย AI 2 ระดับ
 - [ ] การบ้านที่ 4 — การทดสอบอัตโนมัติ 5 รายการ · `test-results.md` · `BACKLOG.md`
 

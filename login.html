@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เข้าสู่ระบบ — FlowU</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">FlowU<span>ระบบยื่นและอนุมัติใบคำร้องฝึกปฏิบัติงาน</span></div>
+  <div class="who">
+    <b>มหาวิทยาลัยแม่ฟ้าหลวง</b>
+    <i>ส่วนจัดหางานและฝึกงานของนักศึกษา</i>
+  </div>
+</header>
+
+<main style="max-width:440px">
+  <h1>เข้าสู่ระบบ</h1>
+  <p class="sub">สมัครสมาชิกหรือเข้าสู่ระบบเพื่อยื่น/พิจารณาคำร้องฝึกปฏิบัติงาน</p>
+
+  <div class="card">
+    <div class="btn-row" style="margin-top:0">
+      <button type="button" class="btn" id="tabLogin">เข้าสู่ระบบ</button>
+      <button type="button" class="btn-ghost" id="tabSignup">สมัครสมาชิก</button>
+    </div>
+
+    <div id="formMsg" class="alert err hidden"></div>
+
+    <form id="formLogin">
+      <label for="loginEmail">อีเมล</label>
+      <input type="email" id="loginEmail" autocomplete="username">
+      <label for="loginPassword">รหัสผ่าน</label>
+      <input type="password" id="loginPassword" autocomplete="current-password">
+      <div class="btn-row">
+        <button type="submit" class="btn">เข้าสู่ระบบ</button>
+      </div>
+    </form>
+
+    <form id="formSignup" class="hidden">
+      <label for="signupName">ชื่อ-นามสกุล</label>
+      <input type="text" id="signupName" placeholder="เช่น สมชาย ทดสอบ">
+      <label for="signupEmail">อีเมล</label>
+      <input type="email" id="signupEmail" autocomplete="username">
+      <label for="signupPassword">รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)</label>
+      <input type="password" id="signupPassword" autocomplete="new-password">
+      <p class="field-hint">บัญชีใหม่ทุกคนเริ่มต้นเป็นบทบาท "นักศึกษา" เสมอ —
+        การเปลี่ยนเป็นผู้พิจารณา/เจ้าหน้าที่ทำโดยแก้ไฟล์ผู้ใช้ในโฟลเดอร์ users ผ่าน Firebase Console เท่านั้น</p>
+      <div class="btn-row">
+        <button type="submit" class="btn">สมัครสมาชิก</button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<footer>
+  FlowU · Kittiya Sirikan · ADT-RAISE Non-Degree Batch 2
+</footer>
+
+<script type="module" src="js/login.js"></script>
+</body>
+</html>

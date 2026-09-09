@@ -14,13 +14,16 @@
     <b>มหาวิทยาลัยแม่ฟ้าหลวง</b>
     <i>ส่วนจัดหางานและฝึกงานของนักศึกษา</i>
   </div>
+  <div id="navUser"></div>
 </header>
 
 <main>
-  <h1>รายการคำร้องฝึกปฏิบัติงาน</h1>
+  <div class="btn-row" style="margin-top:0; justify-content:space-between">
+    <h1>รายการคำร้องฝึกปฏิบัติงาน</h1>
+    <a href="new-request.html" class="btn">+ ยื่นคำร้องใหม่</a>
+  </div>
   <p class="sub">
-    ข้อมูลทั้งหมดในหน้านี้อ่านจาก Cloud Firestore โดยตรง
-    ยังไม่มีการเพิ่ม แก้ไข หรือลบ ซึ่งจะทำในการบ้านที่ 2
+    ข้อมูลทั้งหมดในหน้านี้อ่านจาก Cloud Firestore โดยตรง — กดแถวเพื่อดูรายละเอียดและพิจารณา
   </p>
 
   <div id="status" class="alert wait">กำลังเชื่อมต่อฐานข้อมูล…</div>
@@ -54,7 +57,7 @@
 </main>
 
 <footer>
-  FlowU · การบ้านที่ 1 Module 2 · Kittiya Sirikan · ADT-RAISE Non-Degree Batch 2
+  FlowU · Module 2 · Kittiya Sirikan · ADT-RAISE Non-Degree Batch 2
 </footer>
 
 <script type="module" src="js/requests.js"></script>
