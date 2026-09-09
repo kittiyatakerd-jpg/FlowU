@@ -12,6 +12,15 @@
 
 เอกสารอ้างอิง: `SCOPE.md` (ขอบเขต) · `ACL.md` (สิทธิ์)
 
+## สถานะปัจจุบัน (สัปดาห์ที่ 7)
+
+- ✅ มีระบบล็อกอินแล้ว (Firebase Authentication) — ทุกหน้าต้องล็อกอินก่อนถึงเข้าได้ (`js/auth-guard.js`)
+- ✅ CRUD ครบ 4 ตัวกับ Firestore จริง (สร้าง/แก้ไข/ลบ/อ่านคำร้อง) ผ่าน `new-request.html` และ `request-detail.html`
+- ✅ ปุ่มบนหน้าจอซ่อน/แสดงตาม `role`/`approvalLevel` แล้ว (ดูรายละเอียดที่ `ACL.md`)
+- ⚠️ **ยังไม่แยกสิทธิ์จริงฝั่ง Security Rules** — กฎตอนนี้คือ `allow read, write: if request.auth != null;` ข้อเดียว
+  (ล็อกอินแล้วอ่าน/เขียนได้ทุกเอกสาร) จะเริ่มแยกตาม role จริงในสัปดาห์ที่ 8
+- ✅ Deploy ขึ้น Firebase Hosting แล้ว: https://flowu-7d1a9.web.app
+
 ## ข้อกำหนดทางเทคนิค — ห้ามเปลี่ยน
 
 | หัวข้อ | ข้อกำหนด |
