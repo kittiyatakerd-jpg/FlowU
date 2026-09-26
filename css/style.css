@@ -1,70 +1,75 @@
 /* ============================================================
    FlowU — สไตล์กลางของระบบ
    ใช้ CSS ธรรมดา ไม่มี framework ตามข้อกำหนดของ Module 2
+   โทน: อ้างอิงความทันสมัย/สะอาด/อ่านง่ายจาก openlink.co (โทนม่วง-ครีม)
    ============================================================ */
 
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap');
+
 :root{
-  --red:#A8192E; --red-dk:#7d1223; --red-lt:#fdf3f4;
-  --ink:#1c1c1c; --muted:#7a7a7a; --line:#e2dcdd; --bg:#f6f3f4;
-  --green:#2F7A4F; --green-lt:#eaf4ee;
-  --gold:#C9922B;  --gold-lt:#fbecd9;
-  --blue:#31537A;  --blue-lt:#eef3f8;
+  --primary:#5533FF; --primary-dk:#4426d6; --primary-lt:#efecff;
+  --ink:#2e2e2e; --muted:#8a8a8a; --line:#e7e5e0; --bg:#f6f7f2; --surface:#fff;
+  --green:#1f9d55; --green-lt:#e8f8ee;
+  --gold:#c9922b;  --gold-lt:#fbecd9;
+  --blue:#2f6fed;  --blue-lt:#ecf2fe;
 }
 
 *{ box-sizing:border-box; margin:0; padding:0 }
 
 body{
-  font-family:'Sarabun','IBM Plex Sans Thai','Noto Sans Thai',Tahoma,-apple-system,'Segoe UI',sans-serif;
-  background:var(--bg); color:var(--ink); font-size:15px; line-height:1.6;
+  font-family:'DM Sans','IBM Plex Sans Thai','Noto Sans Thai',Tahoma,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg); color:var(--ink); font-size:15px; line-height:1.65;
 }
 
 /* ---------- แถบบน ---------- */
 header{
-  background:var(--red); color:#fff; padding:0 22px; height:58px;
+  background:var(--surface); color:var(--ink); padding:0 22px; height:64px;
   display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;
+  border-bottom:1px solid var(--line);
 }
-.brand{ font-size:20px; font-weight:700; letter-spacing:.5px }
-.brand span{ font-weight:400; font-size:13px; opacity:.85; margin-left:10px }
-.who{ font-size:13px; text-align:right; line-height:1.35 }
-.who b{ display:block }
+.brand{ font-size:20px; font-weight:700; letter-spacing:.2px; color:var(--primary) }
+.brand span{ font-weight:400; font-size:13px; color:var(--muted); opacity:1; margin-left:10px }
+.who{ font-size:13px; text-align:right; line-height:1.35; color:var(--muted) }
+.who b{ display:block; color:var(--ink) }
 .who i{ font-style:normal; opacity:.85; font-size:11.5px }
 
-main{ max-width:1000px; margin:0 auto; padding:24px 22px 40px }
+main{ max-width:1000px; margin:0 auto; padding:28px 22px 40px }
 
-h1{ font-size:22px; margin-bottom:4px }
-h2{ font-size:16px; color:var(--red); margin-bottom:4px }
+h1{ font-size:23px; margin-bottom:4px; font-weight:700 }
+h2{ font-size:16px; color:var(--primary); margin-bottom:4px; font-weight:600 }
 .sub{ color:var(--muted); font-size:13.5px; margin-bottom:18px }
 .tm{ font-size:12px; color:var(--muted) }
 .muted{ color:var(--muted); font-size:13px }
 
 code{
   font-family:'IBM Plex Mono',Consolas,monospace; font-size:12.5px;
-  background:#f2eeef; color:var(--red-dk); padding:1px 5px; border-radius:3px;
+  background:var(--primary-lt); color:var(--primary-dk); padding:1px 5px; border-radius:4px;
 }
 
 /* ---------- การ์ด ---------- */
 .card{
-  background:#fff; border:1px solid var(--line); border-radius:8px;
-  padding:18px 20px; margin-bottom:18px;
+  background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:20px 22px; margin-bottom:18px;
+  box-shadow:0 1px 2px rgba(46,46,46,.04), 0 8px 24px rgba(46,46,46,.03);
 }
 
 /* ---------- แถบแจ้งสถานะ ---------- */
-.alert{ border-radius:6px; padding:12px 16px; margin-bottom:18px; font-size:13.5px }
-.alert.wait{ background:var(--blue-lt);  border-left:4px solid var(--blue) }
-.alert.ok  { background:var(--green-lt); border-left:4px solid var(--green); color:#22603D }
-.alert.err { background:var(--red-lt);   border-left:4px solid var(--red) }
-.alert b{ display:block; margin-bottom:3px; color:var(--red) }
+.alert{ border-radius:10px; padding:12px 16px; margin-bottom:18px; font-size:13.5px }
+.alert.wait{ background:var(--blue-lt);   border-left:4px solid var(--blue) }
+.alert.ok  { background:var(--green-lt);  border-left:4px solid var(--green); color:#1a6b3c }
+.alert.err { background:var(--primary-lt);border-left:4px solid var(--primary) }
+.alert b{ display:block; margin-bottom:3px; color:var(--primary) }
 
 /* ---------- ชิปประเภทคำร้อง ---------- */
 .chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px }
 .chip{
-  font-size:13px; background:var(--red-lt); color:var(--red-dk);
-  border:1px solid #e8c4c9; border-radius:14px; padding:4px 13px;
+  font-size:13px; background:var(--primary-lt); color:var(--primary-dk);
+  border:1px solid #ded7ff; border-radius:16px; padding:4px 13px;
 }
-.chip.off{ background:#efeced; color:var(--muted); border-color:var(--line) }
+.chip.off{ background:#f0efec; color:var(--muted); border-color:var(--line) }
 
 .pill{
-  font-size:12px; font-weight:600; background:var(--red); color:#fff;
+  font-size:12px; font-weight:600; background:var(--primary); color:#fff;
   border-radius:11px; padding:1px 10px; margin-left:6px; vertical-align:2px;
 }
 
@@ -72,70 +77,76 @@ code{
 .table-wrap{ overflow-x:auto; margin-top:12px }
 table{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:640px }
 th{
-  text-align:left; padding:9px 11px; background:#faf7f8; color:var(--muted);
+  text-align:left; padding:9px 11px; background:#faf9f6; color:var(--muted);
   font-size:12px; font-weight:600; border-bottom:2px solid var(--line); white-space:nowrap;
 }
-td{ padding:11px; border-bottom:1px solid #efeaeb; vertical-align:middle }
+td{ padding:11px; border-bottom:1px solid #f0efec; vertical-align:middle }
 tr:last-child td{ border-bottom:none }
+tr:hover td{ background:#faf9ff }
 .tt{ font-weight:600 }
 .empty{ text-align:center; color:var(--muted); padding:26px 11px }
 
 /* ---------- ป้ายสถานะ ---------- */
 .b{ display:inline-block; font-size:12px; font-weight:600; padding:2px 11px; border-radius:11px; white-space:nowrap }
-.b-wait{ background:var(--blue-lt);  color:var(--blue);  border:1px solid #b9cbe0 }
-.b-back{ background:var(--red-lt);   color:var(--red);   border:1px solid #e8c4c9 }
-.b-ok  { background:var(--green-lt); color:var(--green); border:1px solid #bcdcc8 }
-.b-no  { background:#efeced;         color:#5a5a5a;      border:1px solid #d6cfd1 }
+.b-wait{ background:var(--blue-lt);   color:var(--blue);      border:1px solid #cfdcfb }
+.b-back{ background:var(--gold-lt);   color:var(--gold);      border:1px solid #f1dcb2 }
+.b-ok  { background:var(--green-lt);  color:var(--green);     border:1px solid #bfe8cf }
+.b-no  { background:#f0efec;          color:#5a5a5a;          border:1px solid #ddd9d4 }
 
 footer{
   text-align:center; font-size:11.5px; color:var(--muted);
-  padding:18px; border-top:1px solid var(--line);
+  padding:20px; border-top:1px solid var(--line);
 }
 
 /* ---------- ผู้ใช้ในแถบบน ---------- */
 .who-user{ display:flex; align-items:center; gap:10px }
-.who-user span{ font-size:12.5px }
+.who-user span{ font-size:12.5px; color:var(--muted) }
 
 /* ---------- ปุ่ม ---------- */
 .btn{
   display:inline-block; font:inherit; font-size:13.5px; font-weight:600;
-  padding:8px 16px; border-radius:6px; border:1px solid transparent;
-  background:var(--red); color:#fff; cursor:pointer; text-decoration:none;
+  padding:9px 18px; border-radius:11px; border:1px solid transparent;
+  background:var(--primary); color:#fff; cursor:pointer; text-decoration:none;
+  transition:background .15s ease;
 }
-.btn:hover{ background:var(--red-dk) }
-.btn-ghost{ background:#fff; color:var(--ink); border-color:var(--line) }
-.btn-ghost:hover{ background:#f2eeef }
+.btn:hover{ background:var(--primary-dk) }
+.btn-ghost{ background:var(--surface); color:var(--ink); border-color:var(--line) }
+.btn-ghost:hover{ background:#f0efec }
 .btn-ok{ background:var(--green) }
-.btn-ok:hover{ background:#22603d }
-.btn-danger{ background:var(--red) }
+.btn-ok:hover{ background:#187a41 }
+.btn-danger{ background:#d64545 }
+.btn-danger:hover{ background:#b53838 }
 .btn-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px }
 
 /* ---------- ฟอร์ม ---------- */
 label{ display:block; font-size:13px; font-weight:600; margin:14px 0 5px }
-label .req{ color:var(--red) }
+label .req{ color:var(--primary) }
 input[type="text"], input[type="number"], input[type="email"], input[type="password"],
 input[type="date"], select, textarea{
-  width:100%; font:inherit; font-size:14px; padding:9px 11px;
-  border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink);
+  width:100%; font:inherit; font-size:14px; padding:10px 12px;
+  border:1px solid var(--line); border-radius:10px; background:var(--surface); color:var(--ink);
+}
+input:focus, select:focus, textarea:focus{
+  outline:none; border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-lt);
 }
 textarea{ resize:vertical; min-height:90px }
 .field-hint{ font-size:12px; color:var(--muted); margin-top:3px }
 
 /* ---------- รายละเอียดคำร้อง ---------- */
-.field-row{ display:flex; gap:14px; padding:8px 0; border-bottom:1px solid #f2eeef; font-size:13.5px }
+.field-row{ display:flex; gap:14px; padding:9px 0; border-bottom:1px solid #f0efec; font-size:13.5px }
 .field-row:last-child{ border-bottom:none }
 .field-row .k{ width:170px; flex:none; color:var(--muted) }
 .field-row .v{ flex:1 }
 
 /* ---------- timeline ความเห็น ---------- */
-.timeline-item{ padding:12px 0; border-bottom:1px solid #f2eeef; font-size:13.5px }
+.timeline-item{ padding:12px 0; border-bottom:1px solid #f0efec; font-size:13.5px }
 .timeline-item:last-child{ border-bottom:none }
 .timeline-item .meta{ font-size:12px; color:var(--muted); margin-bottom:3px }
 
 .hidden{ display:none !important }
 
 @media (max-width:600px){
-  header{ height:auto; padding:12px 16px; gap:6px }
+  header{ height:auto; padding:14px 16px; gap:6px }
   .who{ text-align:left }
-  main{ padding:18px 16px 30px }
+  main{ padding:20px 16px 30px }
 }
