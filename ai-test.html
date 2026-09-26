@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ทดสอบ AI — FlowU</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<main>
+  <h1>ทดสอบเรียก AI (ขั้น A1)</h1>
+  <p class="sub">
+    หน้านี้เป็นเครื่องมือทดสอบครั้งเดียวตามใบงานสัปดาห์ที่ 8 / การบ้านที่ 3 — ไม่ใช่หนึ่งในหน้าหลักของระบบ
+    (ไม่ถูก deploy ขึ้น Hosting ดู firebase.json)
+  </p>
+  <div class="card">
+    <button type="button" class="btn" id="btnTest">ส่ง "สวัสดี" ไปหา AI</button>
+    <p id="result" style="margin-top:12px"></p>
+  </div>
+</main>
+
+<script type="module">
+  import { OPENROUTER_API_KEY, OPENROUTER_MODEL } from "./js/ai-config.js";
+  document.getElementById("btnTest").addEventListener("click", async () => {
+    const elResult = document.getElementById("result");
+    elResult.textContent = "⏳ กำลังส่งคำถาม...";
+    try {
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + OPENROUTER_API_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: OPENROUTER_MODEL,
+          messages: [{ role: "user", content: "สวัสดี" }]
+        })
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status + " " + (await res.text()));
+      const data = await res.json();
+      elResult.textContent = "✅ AI ตอบ: " + data.choices[0].message.content;
+    } catch (err) {
+      elResult.textContent = "❌ เรียก AI ไม่สำเร็จ: " + err.message;
+    }
+  });
+</script>
+</body>
+</html>

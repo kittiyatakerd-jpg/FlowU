@@ -1,9 +1,10 @@
 # ค่าตั้งต้นของ Firebase และคีย์ต่าง ๆ — ห้าม commit
 js/config.js
 
-# คีย์ AI (จะใช้ในสัปดาห์ที่ 8)
+# คีย์ AI (สัปดาห์ที่ 8 / การบ้านที่ 3)
 .env
 .env.local
+js/ai-config.js
 
 # Firebase
 .firebase/

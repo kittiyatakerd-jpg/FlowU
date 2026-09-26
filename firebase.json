@@ -7,7 +7,8 @@
       "**/node_modules/**",
       "seed/**",
       "docs/**",
-      "*.md"
+      "*.md",
+      "ai-test.html"
     ]
   },
   "firestore": {

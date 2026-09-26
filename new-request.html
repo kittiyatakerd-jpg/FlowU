@@ -47,14 +47,19 @@
     <label for="academicYear">ปีการศึกษา <span class="req">*</span></label>
     <input type="number" id="academicYear" placeholder="เช่น 2569">
 
+    <label for="reason">เหตุผลอย่างละเอียด <span class="req">*</span></label>
+    <textarea id="reason" placeholder="อธิบายเหตุผลของคำร้องนี้"></textarea>
+
     <label for="typeId">ความประสงค์ (ประเภทคำร้อง) <span class="req">*</span></label>
     <select id="typeId"><option value="">กำลังโหลด…</option></select>
 
+    <div class="btn-row" style="margin-top:8px">
+      <button type="button" class="btn-ghost" id="btnAiClassify">🤖 ให้ AI ช่วยเลือกประเภทคำร้อง</button>
+    </div>
+    <div id="aiSuggestion" class="alert wait hidden"></div>
+
     <label for="typeDetail">ข้อมูลเพิ่มตามประเภท</label>
     <textarea id="typeDetail" placeholder="ถ้าประเภทที่เลือกต้องการรายละเอียดเพิ่ม กรอกที่นี่ (ไม่บังคับ)"></textarea>
-
-    <label for="reason">เหตุผลอย่างละเอียด <span class="req">*</span></label>
-    <textarea id="reason" placeholder="อธิบายเหตุผลของคำร้องนี้"></textarea>
 
     <div class="btn-row">
       <button type="submit" class="btn" id="btnSubmit">บันทึกคำร้อง</button>
