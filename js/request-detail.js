@@ -5,6 +5,7 @@
 import { db } from "./firebase-init.js";
 import { requireLogin, getUserProfile } from "./auth-guard.js";
 import { renderNav } from "./nav.js";
+import { OPENROUTER_API_KEY, OPENROUTER_MODEL } from "./ai-config.js";
 import {
   doc, getDoc, collection, getDocs, addDoc, updateDoc, deleteDoc, query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -14,6 +15,9 @@ const elBox = document.getElementById("requestBox");
 const elMsg = document.getElementById("pageMsg");
 const elCommentBox = document.getElementById("commentBox");
 const elTimeline = document.getElementById("timeline");
+const elAiSummaryBox = document.getElementById("aiSummaryBox");
+const elAiSummaryContent = document.getElementById("aiSummaryContent");
+const btnAiSummarize = document.getElementById("btnAiSummarize");
 
 let currentUser = null;
 let profile = null;
@@ -26,6 +30,7 @@ async function main() {
   profile = await getUserProfile(currentUser.uid);
 
   if (!requestId) { showBoxError("ไม่พบรหัสคำร้องใน URL"); return; }
+  btnAiSummarize.addEventListener("click", summarizeWithAi);
   await load();
 }
 
@@ -43,6 +48,8 @@ async function load() {
 
     renderRequest();
     renderTimeline();
+    renderAiSummary();
+    elAiSummaryBox.classList.remove("hidden");
   } catch (err) {
     console.error(err);
     showBoxError("โหลดข้อมูลไม่สำเร็จ: " + err.message);
@@ -197,6 +204,76 @@ async function doDelete() {
     location.href = "index.html";
   } catch (err) {
     showMsg("ลบไม่สำเร็จ: " + err.message);
+  }
+}
+
+// ── สรุปโดย AI: อ่านคำร้อง + ความเห็นทุกระดับที่มีอยู่แล้ว สรุปสาระสำคัญให้ผู้พิจารณาอ่านก่อนตัดสินใจ ──
+// AI ไม่ตัดสินใจแทน — ห้ามแนะนำอนุมัติ/ไม่อนุมัติ, สถานะจริงเปลี่ยนเฉพาะตอนคนกดปุ่มเองเท่านั้น
+function renderAiSummary() {
+  if (requestData.aiSummary) {
+    elAiSummaryContent.innerHTML = `<div class="alert wait">${esc(requestData.aiSummary)}</div>`;
+    btnAiSummarize.textContent = "ให้ AI สรุปใหม่อีกครั้ง";
+  } else {
+    elAiSummaryContent.innerHTML = '<p class="muted">ยังไม่มีสรุปจาก AI — กดปุ่มด้านล่างเพื่อให้ AI อ่านคำร้องนี้แล้วสรุปให้</p>';
+  }
+}
+
+async function summarizeWithAi() {
+  const r = requestData;
+  btnAiSummarize.disabled = true;
+  btnAiSummarize.textContent = "🤖 กำลังสรุป...";
+
+  const chain = Array.isArray(r.approvalChain) ? r.approvalChain : [];
+  const opinionsText = approvals.length === 0
+    ? "ยังไม่มีความเห็นจากผู้พิจารณาระดับก่อนหน้า"
+    : approvals.map(a => `- ระดับ ${a.level} (${a.approverTitle}) — ${a.approverName}: ${a.decision}${a.comment ? " (" + a.comment + ")" : ""}`).join("\n");
+
+  const prompt =
+    "นี่คือคำร้องฝึกปฏิบัติงานที่รอการพิจารณา ช่วยสรุปสาระสำคัญไม่เกิน 3 ประโยคให้ผู้พิจารณาอ่านก่อนตัดสินใจ " +
+    "ห้ามแนะนำว่าควรอนุมัติหรือไม่อนุมัติ แค่สรุปให้อ่านง่ายและเข้าใจบริบทเท่านั้น\n\n" +
+    "นักศึกษา: " + r.studentName + "\n" +
+    "ประเภทคำร้อง: " + r.typeName + "\n" +
+    "ข้อมูลเพิ่มเติม: " + (r.typeDetail || "—") + "\n" +
+    "เหตุผล: " + r.reason + "\n" +
+    "ภาคการศึกษา/ปี: " + r.semester + "/" + r.academicYear + "\n" +
+    "รอบที่ยื่น: " + (r.round || 1) + (r.returnReason ? " (เคยถูกตีกลับ: " + r.returnReason + ")" : "") + "\n" +
+    "สายอนุมัติทั้งหมด " + chain.length + " ระดับ อยู่ที่ระดับ " + r.currentLevel + "\n" +
+    "ความเห็นที่มีอยู่แล้ว:\n" + opinionsText;
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+
+  try {
+    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      signal: controller.signal,
+      headers: {
+        "Authorization": "Bearer " + OPENROUTER_API_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: OPENROUTER_MODEL,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+
+    const data = await res.json();
+    const answer = (data.choices?.[0]?.message?.content || "").trim();
+
+    const ref = doc(db, "internshipRequests", r.id);
+    await updateDoc(ref, { aiSummary: answer });
+    await addDoc(collection(ref, "aiLog"), { input: prompt, output: answer, createdAt: serverTimestamp() });
+
+    requestData.aiSummary = answer;
+    renderAiSummary();
+  } catch (err) {
+    const text = err.name === "AbortError" ? "AI ตอบช้าเกิน 15 วินาที" : "เรียก AI ไม่สำเร็จ: " + err.message;
+    elAiSummaryContent.innerHTML = `<div class="alert err">⚠️ ${esc(text)}</div>`;
+  } finally {
+    clearTimeout(timer);
+    btnAiSummarize.disabled = false;
+    if (!btnAiSummarize.textContent.includes("สรุปใหม่")) btnAiSummarize.textContent = "ให้ AI สรุปคำร้องนี้ให้อ่านก่อนตัดสินใจ";
   }
 }
 
