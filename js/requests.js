@@ -2,7 +2,7 @@
 // หน้ารายการคำร้อง — อ่านข้อมูลจริงจาก Firestore
 // ============================================================
 import { db } from "./firebase-init.js";
-import { requireLogin } from "./auth-guard.js";
+import { requireLogin, getUserProfile } from "./auth-guard.js";
 import { renderNav } from "./nav.js";
 import {
   collection, getDocs, query, orderBy, where
@@ -46,9 +46,14 @@ async function loadTypes() {
   });
 }
 
-// โหลดคำร้องทั้งหมดมาแสดงเป็นตาราง
-async function loadRequests() {
-  const q = query(collection(db, "internshipRequests"), orderBy("createdAt", "desc"));
+// โหลดคำร้องมาแสดงเป็นตาราง
+// นักศึกษาเห็นเฉพาะของตัวเอง (Security Rules ปฏิเสธทั้ง query ถ้าไม่กรอง studentId) · ผู้พิจารณา/เจ้าหน้าที่เห็นทุกใบ
+async function loadRequests(currentUser, profile) {
+  const base = collection(db, "internshipRequests");
+  const isStudent = !profile?.role || profile.role === "student"; // ไม่มี role ถือว่าเป็นนักศึกษาไว้ก่อน (ปลอดภัยสุด)
+  const q = isStudent
+    ? query(base, where("studentId", "==", currentUser.uid), orderBy("createdAt", "desc"))
+    : query(base, orderBy("createdAt", "desc"));
   const snap = await getDocs(q);
 
   elCount.textContent = snap.size;
@@ -92,9 +97,11 @@ async function loadRequests() {
 
 // เรียกทั้งสองอย่าง และแจ้งข้อผิดพลาดเป็นภาษาไทยถ้าล้มเหลว
 async function main() {
-  await requireLogin().then(renderNav);
+  const currentUser = await requireLogin();
+  renderNav(currentUser);
   try {
-    await Promise.all([loadTypes(), loadRequests()]);
+    const profile = await getUserProfile(currentUser.uid);
+    await Promise.all([loadTypes(), loadRequests(currentUser, profile)]);
     elStatus.className = "alert ok";
     elStatus.textContent = "เชื่อมต่อ Firestore สำเร็จ ข้อมูลด้านล่างมาจากฐานข้อมูลจริง";
   } catch (err) {

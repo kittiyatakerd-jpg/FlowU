@@ -17,3 +17,8 @@ Thumbs.db
 node_modules/
 .vscode/
 .idea/
+
+# Playwright — ชุดทดสอบอัตโนมัติ
+playwright-report/
+playwright-artifacts/
+tests/fixtures/test-accounts.js

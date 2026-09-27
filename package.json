@@ -1,0 +1,11 @@
+{
+  "name": "flowu-tests",
+  "private": true,
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright show-report"
+  }
+}

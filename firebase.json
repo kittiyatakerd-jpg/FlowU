@@ -8,10 +8,17 @@
       "seed/**",
       "docs/**",
       "*.md",
-      "ai-test.html"
+      "ai-test.html",
+      "tests/**",
+      "playwright.config.js",
+      "playwright-report/**",
+      "playwright-artifacts/**",
+      "package.json",
+      "package-lock.json"
     ]
   },
   "firestore": {
-    "rules": "firestore.rules"
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
   }
 }

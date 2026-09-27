@@ -1,11 +1,113 @@
 rules_version = '2';
 
-// FlowU — กฎขั้นต่ำของสัปดาห์ที่ 7: ต้องล็อกอินก่อน ถึงจะอ่าน/เขียนได้
-// ยังไม่แยกสิทธิ์ตาม role (student/approver/staff) — เริ่มแยกจริงสัปดาห์ที่ 8 (ดู ACL.md)
+// FlowU — Security Rules แยกสิทธิ์ตามเจ้าของ/บทบาทจริง (สัปดาห์ที่ 8)
+// อ้างอิง ACL.md และกฎธุรกิจใน CLAUDE.md — ทุกกฎที่หน้าจอซ่อนปุ่มไว้ ต้องบังคับซ้ำที่นี่เสมอ
+// role ใน users/{uid}: student | approver | staff
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+
+    // ── ตัวช่วย ──
+    function signedIn() {
+      return request.auth != null;
+    }
+    // โปรไฟล์ของคนที่ล็อกอินอยู่ (ถ้าไม่มีไฟล์ users ของตัวเอง get() จะ error → ถือว่าไม่ผ่าน)
+    function myProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    function myRole() {
+      return myProfile().role;
+    }
+    function isStaff() {
+      return signedIn() && myRole() == "staff";
+    }
+    function isApproverOrStaff() {
+      return signedIn() && myRole() in ["approver", "staff"];
+    }
+    // ผู้พิจารณาต้องถึงคิวระดับของตัวเอง (approvalLevel == currentLevel) · เจ้าหน้าที่ไม่ติดเงื่อนไขระดับ
+    function canActAtLevel(req) {
+      return myRole() == "staff" || myProfile().approvalLevel == req.currentLevel;
+    }
+    function requestDoc(requestId) {
+      return get(/databases/$(database)/documents/internshipRequests/$(requestId)).data;
+    }
+
+    // ── users/{uid}: เจ้าของเท่านั้น · ห้ามเลื่อนสิทธิ์ตัวเอง ──
+    match /users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      // สมัครใหม่ได้ role student เท่านั้น (js/login.js) — การเลื่อนเป็น approver/staff ทำผ่าน Console
+      allow create: if signedIn() && request.auth.uid == uid
+                    && request.resource.data.role == "student";
+      // แก้โปรไฟล์ตัวเองได้ แต่ห้ามแตะ role และ approvalLevel
+      allow update: if signedIn() && request.auth.uid == uid
+                    && request.resource.data.role == resource.data.role
+                    && request.resource.data.get("approvalLevel", null) == resource.data.get("approvalLevel", null);
+      // ห้ามลบเอง (กันลบแล้วสร้างใหม่เพื่อเปลี่ยน role)
+      allow delete: if false;
+    }
+
+    // ── requestTypes: ทุกคนที่ล็อกอินอ่านได้ · เจ้าหน้าที่เท่านั้นที่แก้ ──
+    match /requestTypes/{typeId} {
+      allow read: if signedIn();
+      allow write: if isStaff();
+    }
+
+    // ── internshipRequests ──
+    match /internshipRequests/{requestId} {
+      // นักศึกษาอ่านได้เฉพาะของตัวเอง · ผู้พิจารณา/เจ้าหน้าที่อ่านได้ทุกใบ
+      allow read: if signedIn()
+                  && (resource.data.studentId == request.auth.uid || isApproverOrStaff());
+
+      // ยื่นใหม่: ต้องเป็นของตัวเอง และเริ่มที่ รอพิจารณา เสมอ (ยื่นมาเป็น อนุมัติ เลยไม่ได้)
+      allow create: if signedIn()
+                    && request.resource.data.studentId == request.auth.uid
+                    && request.resource.data.status == "รอพิจารณา";
+
+      allow update: if signedIn()
+                    // ห้ามโอนคำร้องไปเป็นของคนอื่น
+                    && request.resource.data.studentId == resource.data.studentId
+                    && (
+                      // (a) ผู้พิจารณา/เจ้าหน้าที่ที่ไม่ใช่เจ้าของคำร้อง (BR-09 ห้ามพิจารณาของตัวเอง)
+                      //     — ถ้าแก้เฉพาะ aiSummary/updatedAt ได้เสมอ, ถ้าแก้อย่างอื่นต้องถึงคิวระดับและยัง รอพิจารณา อยู่
+                      (resource.data.studentId != request.auth.uid && isApproverOrStaff()
+                        && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(["aiSummary", "updatedAt"])
+                            || (resource.data.status == "รอพิจารณา" && canActAtLevel(resource.data))))
+                      // (b) เจ้าของแก้แล้วยื่นใหม่ เมื่อถูกตีกลับเท่านั้น (BR-04) — ต้องกลับไปเริ่มที่ระดับ 1 สถานะ รอพิจารณา
+                      || (resource.data.studentId == request.auth.uid
+                          && resource.data.status == "ตีกลับให้แก้ไข"
+                          && request.resource.data.status == "รอพิจารณา"
+                          && request.resource.data.currentLevel == 1)
+                      // (c) เจ้าของกดให้ AI สรุปคำร้องของตัวเองได้ทุกสถานะ — แต่แก้ได้แค่ aiSummary/updatedAt
+                      || (resource.data.studentId == request.auth.uid
+                          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["aiSummary", "updatedAt"]))
+                    );
+
+      // ลบได้เฉพาะเจ้าของ และยังเป็น รอพิจารณา
+      allow delete: if signedIn()
+                    && resource.data.studentId == request.auth.uid
+                    && resource.data.status == "รอพิจารณา";
+
+      // ── approvals: ความเห็นแต่ละระดับ — บันทึกแล้วแก้/ลบไม่ได้ (กฎธุรกิจข้อ 6) ──
+      match /approvals/{approvalId} {
+        allow read: if signedIn()
+                    && (requestDoc(requestId).studentId == request.auth.uid || isApproverOrStaff());
+        allow create: if signedIn()
+                      && isApproverOrStaff()
+                      && requestDoc(requestId).studentId != request.auth.uid
+                      && requestDoc(requestId).status == "รอพิจารณา"
+                      && canActAtLevel(requestDoc(requestId))
+                      && request.resource.data.approverId == request.auth.uid;
+        allow update, delete: if false;
+      }
+
+      // ── aiLog: บันทึกการเรียก AI — เพิ่มได้อย่างเดียว ──
+      match /aiLog/{logId} {
+        allow read: if signedIn()
+                    && (requestDoc(requestId).studentId == request.auth.uid || isApproverOrStaff());
+        allow create: if signedIn()
+                      && (requestDoc(requestId).studentId == request.auth.uid
+                          || (isApproverOrStaff() && requestDoc(requestId).studentId != request.auth.uid));
+        allow update, delete: if false;
+      }
     }
   }
 }

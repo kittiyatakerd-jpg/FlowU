@@ -20,3 +20,29 @@
 
 **ทำไมยังไม่ทำตอนนี้:** อยู่นอกขอบเขตของ Module 2 (ใช้ Firebase Functions ซึ่งเรียน Module อื่น)
 และใบงานสัปดาห์ที่ 8 ยอมรับให้เรียกจากฝั่งเบราว์เซอร์ไปก่อนโดยรู้ข้อจำกัดนี้ชัดเจน
+
+## 🟡 หน้าจัดการประเภทคำร้อง `request-types.html` ยังไม่สร้าง
+
+`SCOPE.md` กำหนดไว้เป็นหน้าที่ 4 ของระบบ (CRUD ประเภทคำร้อง + สายอนุมัติ) แต่ตอนนี้มีจริงแค่ 3 หน้า
+เจ้าหน้าที่ (`role:"staff"`) ต้องแก้ `requestTypes`/`approvalChain` ผ่าน Firebase Console โดยตรงเท่านั้น
+(บันทึกไว้ใน `ACL.md` แล้วเช่นกัน) — เลื่อนไป Module 3 เพราะไม่ได้บล็อกเกณฑ์ผ่าน Module 2 ข้อไหนเลย
+
+## 🟡 ไม่มีหน้าจอเลื่อนสิทธิ์ผู้ใช้ (`role` / `approvalLevel`)
+
+การตั้งบัญชีใหม่ให้เป็น `approver`/`staff` หรือกำหนด `approvalLevel` ทำผ่าน Firebase Console ด้วยมือเท่านั้น
+(ตั้งใจตาม `ACL.md` — Security Rules ก็บังคับห้าม self-service เลื่อนสิทธิ์ตัวเองด้วย) ยังไม่มีหน้าจอในระบบ
+
+## 🟡 `SCOPE.md` เขียนช่อง `aiSuggestion`/`aiReason` ไว้ แต่โค้ดจริงไม่ได้ใช้ชื่อนี้
+
+พบระหว่างเขียน `spec.md` (การบ้านที่ 4): `SCOPE.md` เดิมระบุว่าผลจาก AI เก็บในช่อง `aiSuggestion`/`aiReason`
+บนเอกสาร `internshipRequests` แต่โค้ดจริง (`js/new-request.js` ระดับ 1, `js/request-detail.js` ระดับ 2)
+ไม่เคยเขียนช่องเหล่านี้เลย — ระดับ 1 (`classifyWithAi`) แค่เติมค่าใน dropdown `#typeId` ฝั่งฟอร์ม ไม่บันทึกลง
+Firestore แยกต่างหาก · ระดับ 2 (`summarizeWithAi`) บันทึกจริงแต่ใช้ชื่อช่อง `aiSummary` + subcollection
+`aiLog` แทน — `spec.md` อัปเดตให้ตรงกับของจริงแล้ว ควรพิจารณาว่าจะแก้ `SCOPE.md` ให้ตรง หรือเพิ่มการบันทึก
+`aiSuggestion`/`aiReason` จริงในอนาคตถ้าต้องการเก็บเหตุผลของระดับ 1 ไว้ด้วย
+
+## 🟡 บัญชีทดสอบสำรองจากชุดทดสอบความปลอดภัยจะสะสมใน Firebase Auth Console
+
+`tests/04-security-cross-account.spec.js` และ `tests/03-request-lifecycle.spec.js` สมัครนักศึกษาใหม่จริง
+ผ่าน UI ทุกครั้งที่รัน (อีเมลสุ่มด้วย timestamp กันชนกัน) เพื่อไม่ต้องใช้ Firebase Admin SDK — บัญชีเหล่านี้
+จะค้างอยู่ใน Firebase Authentication Console เรื่อยๆ ไม่มีการลบอัตโนมัติ ต้องเข้าไปเคลียร์เป็นระยะด้วยมือ

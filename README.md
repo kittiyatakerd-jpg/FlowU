@@ -1,6 +1,7 @@
 # FlowU
 
 🔗 **ใช้งานออนไลน์ได้ที่:** https://flowu-7d1a9.web.app
+🧪 **ผลการทดสอบอัตโนมัติ:** ดู [test-results.md](test-results.md)
 
 **ระบบยื่นและอนุมัติใบคำร้องฝึกปฏิบัติงานออนไลน์**
 ส่วนจัดหางานและฝึกงานของนักศึกษา มหาวิทยาลัยแม่ฟ้าหลวง
@@ -50,6 +51,26 @@ HTML · CSS · JavaScript ธรรมดา (ไม่ใช้ framework) · C
 
    หรือใช้ส่วนขยาย Live Server ใน VS Code
 
+5. คัดลอกค่าตั้งต้นของคีย์ AI (จำเป็นเฉพาะถ้าจะทดสอบปุ่ม AI)
+
+   ```
+   cp js/ai-config.example.js js/ai-config.js
+   ```
+
+   แล้วใส่คีย์ OpenRouter จริงลงไป
+
+## วิธีรันชุดทดสอบอัตโนมัติ
+
+```
+npm install
+npx playwright test
+npx playwright show-report   # ดูรายงานแบบละเอียด (HTML)
+```
+
+ต้องคัดลอก `tests/fixtures/test-accounts.example.js` เป็น `tests/fixtures/test-accounts.js` ก่อน (ดูรายละเอียด
+ที่ [test-results.md](test-results.md)) ชุดทดสอบสมัครบัญชีนักศึกษาชั่วคราวขึ้นเองทุกครั้งที่รัน ยกเว้นเทสต์
+ฝั่งผู้พิจารณาที่ต้องมีบัญชี approver ถาวรตั้งค่าไว้ล่วงหน้าใน Firebase Console
+
 ---
 
 ## โครงไฟล์
@@ -68,14 +89,22 @@ js/nav.js               แถบหัวเรื่อง แสดงอี�
 js/login.js             สมัครสมาชิก/เข้าสู่ระบบ
 js/requests.js          อ่านและแสดงข้อมูลคำร้อง
 js/new-request.js        สร้าง/แก้ไขคำร้อง
-js/request-detail.js    ให้ความเห็น/ตัดสิน/ลบคำร้อง
-firestore.rules         กฎความปลอดภัยของฐานข้อมูล (สัปดาห์ 7: ต้องล็อกอินเท่านั้น)
-firebase.json           ค่าตั้งต้น Firebase Hosting
+js/request-detail.js    ให้ความเห็น/ตัดสิน/ลบคำร้อง/สรุปโดย AI (ระดับ 2)
+js/ai-config.example.js แม่แบบคีย์ AI
+js/ai-config.js         คีย์ AI ของหลักสูตร (ค่าจริง) — อยู่ใน .gitignore ไม่ถูก commit
+firestore.rules         กฎความปลอดภัย — เช็ค role/ความเป็นเจ้าของจริง (สัปดาห์ 9)
+firestore.indexes.json  composite index สำหรับ query ที่กรองตาม role
+firebase.json           ค่าตั้งต้น Firebase Hosting + Firestore
 .firebaserc             โปรเจกต์ Firebase ที่ผูกไว้ (flowu-7d1a9)
 seed/README.md          ข้อมูลสมมติสำหรับทดสอบ
 docs/                   ภาพหน้าจอประกอบการส่งงาน
-SCOPE.md                ขอบเขตโครงงาน
+tests/                  ชุดทดสอบอัตโนมัติ (Playwright) — ดู test-results.md
+.claude/agents/         นิยามผู้ช่วย AI 3 ตัวที่ใช้สร้าง/ทดสอบระบบ (การบ้านที่ 4)
+SCOPE.md                ขอบเขตโครงงานเดิม
+spec.md                 สเปคจริงของระบบ ณ ปัจจุบัน (รวม SCOPE.md + สภาพจริงของโค้ด)
 ACL.md                  สิทธิ์การใช้งานตามบทบาท (student/approver/staff)
+BACKLOG.md              งานที่ยังไม่ทำ/ข้อจำกัดที่รู้อยู่แล้ว
+test-results.md         ผลการรันชุดทดสอบอัตโนมัติ
 CLAUDE.md               คู่มือสำหรับ Claude Code
 ```
 
@@ -85,8 +114,9 @@ CLAUDE.md               คู่มือสำหรับ Claude Code
 
 - [x] การบ้านที่ 1 — repo · `SCOPE.md` · อ่านข้อมูลจริงจาก Firestore · ภาพหน้าจอ Console
 - [x] การบ้านที่ 2 — `CLAUDE.md` · เพิ่ม แก้ ลบ · ระบบล็อกอิน (Firebase Authentication) · `ACL.md` · นำขึ้นออนไลน์ (Firebase Hosting) · Security Rules ขั้นต่ำ (`request.auth != null`)
-- [ ] การบ้านที่ 3 — ผู้ช่วย AI 2 ระดับ
-- [ ] การบ้านที่ 4 — การทดสอบอัตโนมัติ 5 รายการ · `test-results.md` · `BACKLOG.md`
+- [x] การบ้านที่ 3 — ผู้ช่วย AI 2 ระดับ (จัดประเภทอัตโนมัติ + สรุปคำร้องให้ผู้พิจารณา)
+- [x] การบ้านที่ 4 — Security Rules รายบทบาทจริง · ทีม subagent 3 ตัว (`.claude/agents/`) · การทดสอบอัตโนมัติ
+  6 รายการ · `spec.md` · `test-results.md` · `BACKLOG.md`
 
 ---
 
